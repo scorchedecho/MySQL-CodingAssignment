@@ -29,6 +29,7 @@ CREATE TABLE project_category (
     PRIMARY KEY (project_id, category_id),
     FOREIGN KEY (project_id) REFERENCES project(project_id),
     FOREIGN KEY (category_id) REFERENCES category(category_id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE material (
@@ -40,6 +41,7 @@ CREATE TABLE material (
 
     PRIMARY KEY (material_id),
     FOREIGN KEY (project_id) REFERENCES project(project_id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE step (
@@ -50,4 +52,5 @@ CREATE TABLE step (
 
     PRIMARY KEY (step_id),
     FOREIGN KEY (project_id) REFERENCES project(project_id)
+    ON DELETE CASCADE
 );

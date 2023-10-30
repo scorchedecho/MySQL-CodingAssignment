@@ -17,6 +17,7 @@ public class DbConnection {
   /**
    * Establish a connection with the database.
    * @return the {@link java.sql.Connection Connection} object.
+   * @throws DbException If an error occurs.
    */
   public static Connection getConnection() {
     String uri = String.format("jdbc:mysql://%s:%d/%s?user=%s&password=%s", HOST, PORT, SCHEMA, USER, PASSWORD);

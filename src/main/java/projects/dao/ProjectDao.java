@@ -82,6 +82,90 @@ public class ProjectDao extends DaoBase {
   }
 
   /**
+   * Modify a project.
+   */
+  public boolean modifyProjectDetails(Project project) {
+    // SQL Statement to update project values in database.
+    // @formatter:off
+    String sql = ""
+        + "UPDATE " + PROJECT_TABLE + " "
+        + "SET project_name = ?, estimated_hours = ?, actual_hours = ?, difficulty = ?, notes = ? "
+        + "WHERE project_id = ?";
+    // @formatter:on
+
+    // Attempt connection & transaction.
+    try (Connection conn = DbConnection.getConnection()) {
+      // Start transaction.
+      startTransaction(conn);
+
+      // Attempt to update project values in database.
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        // Set project details as parameters.
+        setParameter(stmt, 1, project.getProjectName(), String.class);
+        setParameter(stmt, 2, project.getEstimatedHours(), BigDecimal.class);
+        setParameter(stmt, 3, project.getActualHours(), BigDecimal.class);
+        setParameter(stmt, 4, project.getDifficulty(), Integer.class);
+        setParameter(stmt, 5, project.getNotes(), String.class);
+        setParameter(stmt, 6, project.getProjectId(), Integer.class);
+
+        // Execute the statement.
+        boolean modified = stmt.executeUpdate() > 0;
+
+        // Commit the transaction.
+        commitTransaction(conn);
+
+        // Return true if rows were affected.
+        return modified;
+      } catch (Exception e) {
+        // Rollback transaction on failure.
+        rollbackTransaction(conn);
+        throw new DbException(e);
+      }
+    } catch (SQLException sqle) {
+      throw new DbException(sqle);
+    }
+  }
+
+  /**
+   * Delete a project.
+   */
+  public boolean deleteProject(Integer projectId) {
+    // SQL Statement to delete project values from database.
+    // @formatter:off
+    String sql = ""
+        + "DELETE FROM " + PROJECT_TABLE + " "
+        + "WHERE project_id = ?";
+    // @formatter:on
+
+    // Attempt connection & transaction.
+    try (Connection conn = DbConnection.getConnection()) {
+      // Start transaction.
+      startTransaction(conn);
+
+      // Attempt to delete project values from database.
+      try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        // Set project details as parameters.
+        setParameter(stmt, 1, projectId, Integer.class);
+
+        // Execute the statement.
+        boolean deleted = stmt.executeUpdate() > 0;
+
+        // Commit the transaction.
+        commitTransaction(conn);
+
+        // Return true if rows were affected.
+        return deleted;
+      } catch (Exception e) {
+        // Rollback transaction on failure.
+        rollbackTransaction(conn);
+        throw new DbException(e);
+      }
+    } catch (SQLException sqle) {
+      throw new DbException(sqle);
+    }
+  }
+
+  /**
    * Fetch all projects from the database.
    */
   public List<Project> fetchAllProjects() {

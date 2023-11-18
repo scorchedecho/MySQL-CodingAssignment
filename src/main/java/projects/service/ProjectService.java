@@ -43,4 +43,28 @@ public class ProjectService {
     return projectDao.fetchProjectById(projectId).orElseThrow(() ->
         new NoSuchElementException("Project with project ID=" + projectId + " not found."));
   }
+
+  /**
+   * Modify a project.
+   *
+   * @param project The project to modify.
+   */
+  public void modifyProjectDetails(Project project) {
+    if (!projectDao.modifyProjectDetails(project)) {
+      throw new NoSuchElementException(
+          "Project with project ID=" + project.getProjectId() + " not found."
+      );
+    }
+  }
+
+  /**
+   * Delete a project.
+   *
+   * @param projectId The project ID.
+   */
+  public void deleteProject(Integer projectId) {
+    if (!projectDao.deleteProject(projectId)) {
+      throw new NoSuchElementException("Project with project ID=" + projectId + " not found.");
+    }
+  }
 }

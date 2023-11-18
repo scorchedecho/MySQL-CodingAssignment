@@ -11,6 +11,7 @@ public class DbException extends RuntimeException {
 
   /**
    * Throw an exception with just a message.
+   *
    * @param message The message to display.
    */
   public DbException(String message) {
@@ -19,6 +20,7 @@ public class DbException extends RuntimeException {
 
   /**
    * Throw an exception with just a cause.
+   *
    * @param cause The cause of the exception.
    */
   public DbException(Throwable cause) {
@@ -27,6 +29,7 @@ public class DbException extends RuntimeException {
 
   /**
    * Throw an exception with a message and a cause.
+   *
    * @param message The message to display.
    * @param cause The cause of the exception.
    */

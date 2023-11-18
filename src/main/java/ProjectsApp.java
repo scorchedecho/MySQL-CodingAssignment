@@ -15,10 +15,13 @@ import projects.service.ProjectService;
 public class ProjectsApp {
   private Scanner scanner = new Scanner(System.in);
   private ProjectService projectService = new ProjectService();
+  private Project currentProject;
 
   // @formatter:off
   private List<String> operations = List.of(
-      "1) Add a project"
+      "1) Add a project",
+      "2) List projects",
+      "3) Select a project"
   );
   // @formatter:on
 
@@ -42,19 +45,49 @@ public class ProjectsApp {
           case 1:
             createProject();
             break;
+          case 2:
+            listProjects();
+            break;
+          case 3:
+            selectProjects();
+            break;
           default:
             System.out.println("\n" + selection + " is not a valid selection. Try again.");
             break;
         }
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         System.out.println("An error occurred: " + e + " Please try again.");
       }
     }
   }
 
   /**
+   * Select projects.
+   */
+  private void selectProjects() {
+    listProjects();
+    Integer projectId = getIntInput("Enter the project ID to select");
+
+    currentProject = null;
+    currentProject = projectService.fetchProjectById(projectId);
+  }
+
+  /**
+   * List projects.
+   */
+  private void listProjects() {
+    List<Project> projects = projectService.fetchAllProjects();
+
+    System.out.println("\nProjects:");
+
+    projects.forEach(project ->
+        System.out.println(" " + project.getProjectId() + ") " + project.getProjectName()
+    ));
+  }
+
+  /**
    * Exit the menu.
+   *
    * @return True if the menu should exit, false otherwise.
    */
   private boolean exitMenu() {
@@ -65,6 +98,7 @@ public class ProjectsApp {
 
   /**
    * Get the user's selection.
+   *
    * @return The user's selection, -1 if nothing is selected.
    */
   private int getUserSelection() {
@@ -81,10 +115,18 @@ public class ProjectsApp {
   private void printOperations() {
     System.out.println("\nThese are the available selections. Press the enter key to quit:");
     operations.forEach(line -> System.out.println(" " + line));
+
+    if (Objects.isNull(currentProject)) {
+      System.out.println("\nYou are not working with a project.");
+    }
+    else {
+      System.out.println("\nYou are working with project: " + currentProject);
+    }
   }
 
   /**
    * Get an int input from the user's String input.
+   *
    * @param prompt The prompt for the user
    * @return The int input from the user.
    */
@@ -97,14 +139,14 @@ public class ProjectsApp {
 
     try {
       return Integer.valueOf(input);
-    }
-    catch (NumberFormatException nfe) {
+    } catch (NumberFormatException nfe) {
       throw new DbException(input + " is not a valid integer number.");
     }
   }
 
   /**
    * Get a decimal input from the user's String input.
+   *
    * @param prompt The prompt for the user
    * @return The decimal input from the user.
    */
@@ -117,18 +159,18 @@ public class ProjectsApp {
 
     try {
       return new BigDecimal(input).setScale(2);
-    }
-    catch (NumberFormatException nfe) {
+    } catch (NumberFormatException nfe) {
       throw new DbException(input + " is not a valid decimal number.");
     }
   }
 
   /**
    * Get a String input from the user.
+   *
    * @param prompt The prompt for the user.
    * @return The String input from the user.
    */
-  private String getStringInput (String prompt) {
+  private String getStringInput(String prompt) {
     System.out.print(prompt + ": ");
     String input = scanner.nextLine();
 
@@ -138,7 +180,7 @@ public class ProjectsApp {
   /**
    * Create a project.
    */
-  private void createProject () {
+  private void createProject() {
     // Gather required information from the user.
     String projectName = getStringInput("Enter the project name");
     BigDecimal estimatedHours = getDecimalInput("Enter the estimated hours");

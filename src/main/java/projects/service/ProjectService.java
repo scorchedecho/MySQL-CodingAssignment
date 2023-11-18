@@ -1,34 +1,46 @@
-package projects.service;/*
- *  Copyright 2022 scorchedE.C.H.O
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at:
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
+package projects.service;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import projects.dao.ProjectDao;
 import projects.entity.Project;
 
 /**
  * ProjectService class of the database test application.
+ *
+ * @author Ari
+ * @since 2023-10-30
  */
 public class ProjectService {
   private ProjectDao projectDao = new ProjectDao();
 
   /**
    * Add a project to the database.
+   *
    * @param project The project to add.
    * @return The project added.
    */
   public Project addProject(Project project) {
     return projectDao.insertProject(project);
+  }
+
+  /**
+   * Fetch all projects from the database.
+   *
+   * @return The list of projects.
+   */
+  public List<Project> fetchAllProjects() {
+    return projectDao.fetchAllProjects();
+  }
+
+  /**
+   * Fetch a project by project ID.
+   *
+   * @param projectId The project ID.
+   * @return The project.
+   */
+  public Project fetchProjectById(Integer projectId) {
+    return projectDao.fetchProjectById(projectId).orElseThrow(() ->
+        new NoSuchElementException("Project with project ID=" + projectId + " not found."));
   }
 }

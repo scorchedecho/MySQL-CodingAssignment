@@ -42,3 +42,4 @@ build/
 ### Course ###
 .settings/
 target/
+.idea/checkstyleidea-libs/readme.txt
